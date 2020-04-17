@@ -69,10 +69,9 @@ class StopwatchApp():
         wasp.watch.display.mute(False)
 
     def convert(self, seconds):
-#        seconds = round(seconds, 2)
         m = seconds // 60
         s = seconds % 60 // 1
-        ms = seconds % 60 % 1 * 100
+        ms = seconds % 60 % 1 // 0.01
         return '{:02.0f}:{:02.0f}:{:02.0f}'.format(m, s, ms)
 
     def update(self):
