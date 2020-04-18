@@ -12,8 +12,6 @@ class StopwatchApp():
         self.last_press = -1
         self.time = 0
         self.state = 0
-        self.draw()
-        wasp.system.request_tick(1000)
 
     def sleep(self):
         return True
@@ -22,12 +20,14 @@ class StopwatchApp():
         self.update()
 
     def tick(self, ticks):
-        self.update()
+        if self.state < 0:
+            self.update()
 
     def foreground(self):
         """Activate the application."""
         self.on_screen = ( -1, -1, -1, -1, -1, -1 )
         self.draw()
+        wasp.system.request_tick(97)
         wasp.system.request_event(wasp.EventMask.TOUCH |
                                   wasp.EventMask.BUTTON)
 
@@ -76,8 +76,9 @@ class StopwatchApp():
 
     def update(self):
         draw = wasp.watch.drawable
-        draw.fill(0, 0, 30, 240, 240-30)
         if self.state < 0:
-            draw.string('G {}'.format(self.convert(time.time() - self.time)), 0, 108, width=240)
+            if((time.time() - self.time) > 99*60):
+                self.new()
+            draw.string('{}'.format(self.convert(time.time() - self.time)), 0, 108, width=240)
         else:
-            draw.string('S {}'.format(self.convert(self.state)), 0, 108, width=240)
+            draw.string('{}'.format(self.convert(self.state)), 0, 108, width=240)
